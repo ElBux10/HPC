@@ -1,0 +1,92 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2306                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       volScalarField;
+    object      k;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+#include       "include/angulationParameters"
+#include        "include/initialConditions"
+
+dimensions      [0 2 -2 0 0 0 0];
+
+internalField   uniform $turbulentKE;
+
+boundaryField
+{
+    #includeEtc "caseDicts/setConstraintTypes"
+
+    //- Define inlet conditions
+    #include "include/fixedInlet"
+
+    outlet
+    {
+        type            inletOutlet;
+        inletValue      $internalField;
+        value           $internalField;
+    }
+
+    lowerWall
+    {
+        type            kqRWallFunction;
+        value           $internalField;
+    }
+
+    treno15
+    {
+        type            kqRWallFunction;
+        value           $internalField;
+    }
+    pareti_galleria 
+    {
+        type            kqRWallFunction;
+        value           $internalField;   
+    }
+#include "include/pareti_Slip"
+    #include "include/frontBackUpperPatches"
+}    
+
+
+// In case the angluationFlag is set to TRUE, the following patches are redefined
+    //#ifeq $angulationFlag true
+       // #if #eval {$angulationAngle < 0}
+           // backWall
+           // {
+           //     type  fixedValue;  //diventa entrata
+           //     value $internalField;
+            //}
+       // #else
+           // backWall
+           // {
+           //     type            inletOutlet; //in caso di angolo d'attacco negativo diventa outflow condition
+           //     inletValue      $internalField;
+           //     value           $internalField;
+          //  }
+      //  #endif
+
+       // #if #eval {$angulationAngle > 0}
+        //    frontWall
+       //     {
+        //        type  fixedValue;
+        //        value $internalField;
+        //    }
+      //  #else
+       //     frontWall
+           // {
+           //     type            inletOutlet;
+           //     inletValue      $internalField;
+           //     value           $internalField;
+           // }
+       // #endif
+   // #endif
+//}
+
+// ************************************************************************* //

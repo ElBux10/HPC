@@ -1,0 +1,87 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2306                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       volScalarField;
+    object      p;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+#include       "include/angulationParameters"
+#include        "include/initialConditions"
+
+dimensions      [0 2 -2 0 0 0 0];
+
+internalField   uniform $pressure;
+
+boundaryField
+{
+    #includeEtc "caseDicts/setConstraintTypes"
+
+    inlet
+    {
+        type            zeroGradient;
+    }
+
+    outlet
+    {
+        type            fixedValue;
+        value           $internalField;
+    }
+
+    lowerWall
+    {
+        type            zeroGradient;
+    }
+    treno15
+    {
+        type            zeroGradient;
+    }
+    pareti_galleria
+    {
+        type            zeroGradient;   
+    }
+   
+    #include "include/pareti_Slip" 
+    #include "include/frontBackUpperPatches" 
+
+     // In case the angluationFlag is set to TRUE, the following patches are redefined
+    #ifeq $angulationFlag true
+        #if #eval {$angulationAngle < 0}
+            backWall
+            {
+                type            zeroGradient;
+            }
+        #else
+            backWall
+            {
+                type            fixedValue;
+                value           $internalField;
+            }
+        #endif
+
+        #if #eval {$angulationAngle > 0}
+            frontWall
+            {
+                type            zeroGradient;
+            }
+        #else
+            frontWall
+            {
+                type            fixedValue;
+                value           $internalField;
+            }
+        #endif
+    #endif
+
+    
+}
+
+
+// ************************************************************************* //
