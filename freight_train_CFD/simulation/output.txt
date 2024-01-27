@@ -1,0 +1,10 @@
+/software/spack/spack/opt/spack/linux-rocky8-sandybridge/gcc-13.2.0/openfoam-2306-tnytlfvx6w7bny3eui4ohh2fyxmj5737
+Running surfaceFeatureExtract on /home/meccanica/helbouhali/HPC/freight_train_CFD/simulation
+Running blockMesh on /home/meccanica/helbouhali/HPC/freight_train_CFD/simulation
+Running decomposePar on /home/meccanica/helbouhali/HPC/freight_train_CFD/simulation
+Running snappyHexMesh (16 processes) on /home/meccanica/helbouhali/HPC/freight_train_CFD/simulation 
+Restore 0/ from 0.orig/  [processor directories]
+Running patchSummary (16 processes) on /home/meccanica/helbouhali/HPC/freight_train_CFD/simulation 
+Running potentialFoam (16 processes) on /home/meccanica/helbouhali/HPC/freight_train_CFD/simulation 
+Running checkMesh (16 processes) on /home/meccanica/helbouhali/HPC/freight_train_CFD/simulation 
+Running simpleFoam (16 processes) on /home/meccanica/helbouhali/HPC/freight_train_CFD/simulation 

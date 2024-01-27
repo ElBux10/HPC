@@ -16,12 +16,12 @@ FoamFile
 
 numberOfSubdomains 16;
 
-method          scotch;
-/*
+method          hierarchical;
+
 coeffs
 {
-    n           (3 2 1);
+    n           (8 2 1);
 }
-*/
+
 
 // ************************************************************************* //

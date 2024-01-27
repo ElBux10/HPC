@@ -1,14 +1,18 @@
 #!/bin/sh
+#module use /software/spack/spack/share/spack/modules/linux-rocky8-sandybridge/
+#module load openfoam
+echo $WM_PROJECT_DIR
 cd "${0%/*}" || exit                                # Run from this directory
 . ${WM_PROJECT_DIR:?}/bin/tools/RunFunctions        # Tutorial run functions
 #------------------------------------------------------------------------------
-# Alternative decomposeParDict name:
-#decompDict="-decomposeParDict system/decomposeParDict.6"
 ## Standard decomposeParDict name:
 # unset decompDict
 
 # Define the local directory where the simulation is run
 localDir='/home/meccanica/helbouhali/HPC'
+
+# Alternative decomposeParDict name:
+decompDict="-decomposeParDict /home/meccanica/helbouhali/HPC/freight_train_CFD/simulation/system/decomposeParDict"
 
 # copy train surface from resources directory
 mkdir -p "$localDir"/freight_train_CFD/simulation/constant/triSurface
@@ -22,14 +26,13 @@ mkdir -p "$localDir"/freight_train_CFD/simulation/results
 
 # Run the applications and return the log files to the results directory
 
-
 runApplication surfaceFeatureExtract
 
 runApplication blockMesh
 
 runApplication $decompDict decomposePar
 
-# Using distributedTriSurfaceMesh?
+
 if foamDictionary -entry geometry -value system/snappyHexMeshDict | \
    grep -q distributedTriSurfaceMesh
 then
@@ -39,14 +42,6 @@ fi
 
 runParallel $decompDict snappyHexMesh -overwrite
 
-#runParallel $decompDict topoSet
-
-#runParallel $decompDict createPatch -overwrite
-
-#- For non-parallel running: - set the initial fields
-# restore0Dir
-
-#- For parallel running: set the initial fields
 restore0Dir -processor
 
 runParallel $decompDict patchSummary
